@@ -1,0 +1,84 @@
+package com.projekLepkom.Lepkom.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.projekLepkom.Lepkom.dto.request.CreateJadwalPraktikumRequest;
+import com.projekLepkom.Lepkom.dto.request.UpdateJadwalPraktikumRequest;
+import com.projekLepkom.Lepkom.service.JadwalPraktikumService;
+import org.springframework.web.bind.annotation.PutMapping;
+
+@RestController
+@RequestMapping("/jadwalPraktikum")
+public class JadwalPraktikum {
+    
+    @Autowired
+    private JadwalPraktikumService jadwalPraktikumService;
+
+    @PostMapping()
+    public ResponseEntity <String> post(@RequestBody CreateJadwalPraktikumRequest cPraktikumRequest) {
+        try {
+            jadwalPraktikumService.add(cPraktikumRequest);
+            return ResponseEntity.ok().body("data berhasil ditambahkan");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping()
+    public ResponseEntity <?> getAll() {
+        try {
+            return ResponseEntity.ok().body(jadwalPraktikumService.getAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity <?> getByid(@PathVariable (name = "id") String id) {
+        try {
+            return ResponseEntity.ok().body(jadwalPraktikumService.getById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping()
+    public ResponseEntity <?> edit(@RequestBody UpdateJadwalPraktikumRequest updateJadwalPraktikumRequest) {
+        try {
+            jadwalPraktikumService.edit(updateJadwalPraktikumRequest);
+            return ResponseEntity.ok().body("data berhasil di edit");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping()
+    public ResponseEntity <?> deleteIds(@RequestBody List<String>ids){
+        try {
+            jadwalPraktikumService.deleteIds(ids);
+            return ResponseEntity.ok().body("data berhasil di hapus");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity <?> deleteById(@PathVariable String id){
+        try {
+            jadwalPraktikumService.deleteById(id);
+            return ResponseEntity.ok().body("data dengan "+id + " berhasil di hapus");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+}
