@@ -46,6 +46,10 @@ public class KelasService {
         return kelas;
     }
 
+    public Kelas createMaptoEntity(Kelas kelas, UpdateKelasRequest updateKelasRequest){
+        kelas.setNama(updateKelasRequest.getNama());
+        return kelas;
+    }
 
     public void updateMaptoEntity(Kelas kelas, UpdateKelasRequest updateKelasRequest){
         kelas.setNama(updateKelasRequest.getNama());
@@ -96,9 +100,12 @@ public class KelasService {
         if (updateKelasRequest.getId()==null) {
             throw new RuntimeException("id tidak boleh kosong");
         }
-        kelasRepository.findById(updateKelasRequest.getId());
-        Kelas kelas = kelasRepository.saveAndFlush(createMaptoEntity(updateKelasRequest));
-        return kelas;
+        var optEntity = kelasRepository.findById(updateKelasRequest.getId());
+        if(optEntity.isEmpty()){
+            throw new RuntimeException("id tidak ditemukan");
+        }
+        var entity = optEntity.get();
+        return kelasRepository.saveAndFlush(createMaptoEntity(entity, updateKelasRequest));
     }    
 
     @Transactional
